@@ -68,6 +68,7 @@ object Main {
     var objcTypePrefix: String = ""
     var objcIncludePrefix: String = ""
     var objcExtendedRecordIncludePrefix: String = ""
+    var objcBridgingHeader: Option[File] = None
     var objcppIncludePrefix: String = ""
     var objcppIncludeCppPrefix: String = ""
     var objcppIncludeObjcPrefixOptional: Option[String] = None
@@ -164,6 +165,8 @@ object Main {
         .text("The prefix for Objective-C data types (usually two or three letters)")
       opt[String]("objc-include-prefix").valueName("<prefix>").foreach(objcIncludePrefix = _)
         .text("The prefix for #import of header files from Objective-C files.")
+      opt[File]("objc-bridging-header").valueName("<path>").foreach(x => objcBridgingHeader = Some(x))
+        .text("The path to Objective-C Bridging Header used in XCode's Swift projects.")
       note("")
       opt[File]("objcpp-out").valueName("<out-folder>").foreach(x => objcppOutFolder = Some(x))
         .text("The output folder for private Objective-C++ files (Generator disabled if unspecified).")
@@ -281,6 +284,14 @@ object Main {
     } else {
       None
     }
+    val objcBridgingHeaderWriter = if (objcBridgingHeader.isDefined) {
+      SwiftGenerator.createRelatedObjCpp(objcBridgingHeader.get.getPath)
+      val writer = new BufferedWriter(new FileWriter(objcBridgingHeader.get))
+      SwiftGenerator.writeAutogenerationWarning(writer)
+      Some(writer)
+    } else {
+      None
+    }
 
     val outSpec = Spec(
       javaOutFolder,
@@ -325,6 +336,7 @@ object Main {
       objcHeaderExt,
       objcIncludePrefix,
       objcExtendedRecordIncludePrefix,
+      objcBridgingHeaderWriter,
       objcppIncludePrefix,
       objcppIncludeCppPrefix,
       objcppIncludeObjcPrefix,
@@ -344,6 +356,9 @@ object Main {
     finally {
       if (outFileListWriter.isDefined) {
         outFileListWriter.get.close()
+      }
+      if (objcBridgingHeaderWriter.isDefined) {
+        objcBridgingHeaderWriter.get.close()
       }
     }
   }
