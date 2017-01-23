@@ -42,6 +42,7 @@ object Main {
     var javaCppException: Option[String] = None
     var javaAnnotation: Option[String] = None
     var javaGenerateInterfaces: Boolean = false
+    var javaJsonPropertyAnnotation: Option[String] = None
     var javaNullableAnnotation: Option[String] = None
     var javaNonnullAnnotation: Option[String] = None
     var javaUseFinalForRecord: Boolean = true
@@ -110,6 +111,8 @@ object Main {
         .text("Java annotation (@Foo) to place on all generated Java classes")
       opt[Boolean]("java-generate-interfaces").valueName("<true/false>").foreach(x => javaGenerateInterfaces = x)
         .text("Whether Java interfaces should be used instead of abstract classes where possible (default: false).")
+      opt[String]("java-json-property-annotation").valueName("<json-property-annotation-class>").foreach(x => javaJsonPropertyAnnotation = Some(x))
+        .text("Java annotation (@JsonProperty) to use in records' constructors")
       opt[String]("java-nullable-annotation").valueName("<nullable-annotation-class>").foreach(x => javaNullableAnnotation = Some(x))
         .text("Java annotation (@Nullable) to place on all fields and return values that are optional")
       opt[String]("java-nonnull-annotation").valueName("<nonnull-annotation-class>").foreach(x => javaNonnullAnnotation = Some(x))
@@ -301,6 +304,7 @@ object Main {
       javaCppException,
       javaAnnotation,
       javaGenerateInterfaces,
+      javaJsonPropertyAnnotation,
       javaNullableAnnotation,
       javaNonnullAnnotation,
       javaUseFinalForRecord,

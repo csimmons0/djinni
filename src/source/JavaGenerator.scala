@@ -36,6 +36,7 @@ class JavaGenerator(spec: Spec) extends Generator(spec) {
     var java = mutable.TreeSet[String]()
 
     spec.javaAnnotation.foreach(pkg => java.add(pkg))
+    spec.javaJsonPropertyAnnotation.foreach(pkg => java.add(pkg))
     spec.javaNullableAnnotation.foreach(pkg => java.add(pkg))
     spec.javaNonnullAnnotation.foreach(pkg => java.add(pkg))
 
@@ -253,7 +254,8 @@ class JavaGenerator(spec: Spec) extends Generator(spec) {
           val skipFirst = SkipFirst()
           for (f <- r.fields) {
             skipFirst { w.wl(",") }
-            marshal.nullityAnnotation(f.ty).map(annotation => w.w(annotation + " "))
+            marshal.nullityAnnotation(f.ty).map(annotation => w.w(annotation + " ") )
+            marshal.javaJsonPropertyAnnotation.map(annotation => w.w(s"""${annotation}("${idJava.field(f.ident)}") """))
             w.w(marshal.typename(f.ty) + " " + idJava.local(f.ident))
           }
           w.wl(") {")
