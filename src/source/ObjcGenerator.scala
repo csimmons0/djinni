@@ -85,6 +85,8 @@ class ObjcGenerator(spec: Spec) extends BaseObjcGenerator(spec) {
     })
 
     val self = marshal.typename(ident, i)
+    val weakProxyClassName = s"${self}WeakProxy"
+    val weakProxyInitializerSignature = s"- (nonnull instancetype) initWithActual:(nonnull id<${self}>)actual"
 
     refs.header.add("#import <Foundation/Foundation.h>")
 
@@ -119,13 +121,49 @@ class ObjcGenerator(spec: Spec) extends BaseObjcGenerator(spec) {
       }
       w.wl
       w.wl("@end")
+      w.wl
+
+      // If the interface is +o, declare its weak proxy class.
+      if (self == "DDJRequestVisitSearchDisplay")
+      {
+        w.wl(s"@interface ${weakProxyClassName} : NSObject<${self}>")
+        w.wl(s"@property (weak, nonatomic, nullable) id<${self}> actual;")
+        w.wl(s"${weakProxyInitializerSignature};")
+        w.wl(s"@end")        
+      }
     })
 
     // Generate the implementation file for Interface
-    if (i.consts.nonEmpty) {
+    if (i.consts.nonEmpty || (self == "DDJRequestVisitSearchDisplay")) {
       refs.body.add("#import " + q(spec.objcIncludePrefix + marshal.headerName(ident)))
       writeObjcFile(bodyName(ident.name), origin, refs.body, w => {
         generateObjcConstants(w, i.consts, self, ObjcConstantType.ConstVariable)
+        w.wl
+        w.wl(s"@implementation ${weakProxyClassName}")
+        //w.wl(s"@synthesize actual;")
+        
+        // Write the weak proxy's initializer.
+        w.wl(weakProxyInitializerSignature)
+        w.wl("{")
+        w.wl("self = [super init]; self.actual = actual; return self;");
+        w.wl("}")
+        w.wl
+
+        // Write the weak proxy's implementation of the interface's methods.
+        for (method <- i.methods) {
+          val methodName = idObjc.method(method.ident)
+          val methodDeclaration = s"- (${marshal.returnType(method.ret)}) ${methodName}"
+          writeAlignedObjcCall(w, methodDeclaration, method.params, "\n", p => (idObjc.field(p.ident), s"(${marshal.paramType(p.ty)})${idObjc.local(p.ident)}"))
+          w.wl("{")
+          w.wl(s"id<${self}> capturedActual = self.actual;")
+          w.wl("if (capturedActual)")
+          w.wl("{")
+          writeAlignedObjcCall(w, s"[capturedActual ${methodName}", method.params, "];\n", p => (idObjc.field(p.ident), s"${idObjc.local(p.ident)}"))
+          w.wl("}")
+          w.wl("}")
+        }
+
+        w.wl("@end")
       })
       // For constants implemented via Methods, we generate their definitions in the
       // corresponding ObjcCpp file (i.e.: `ClassName`+Private.mm)
