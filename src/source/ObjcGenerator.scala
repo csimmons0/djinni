@@ -138,31 +138,31 @@ class ObjcGenerator(spec: Spec) extends BaseObjcGenerator(spec) {
       refs.body.add("#import " + q(spec.objcIncludePrefix + marshal.headerName(ident)))
       writeObjcFile(bodyName(ident.name), origin, refs.body, w => {
         generateObjcConstants(w, i.consts, self, ObjcConstantType.ConstVariable)
-        w.wl
         w.wl(s"@implementation ${weakProxyClassName}")
-        //w.wl(s"@synthesize actual;")
         
         // Write the weak proxy's initializer.
-        w.wl(weakProxyInitializerSignature)
-        w.wl("{")
-        w.wl("self = [super init]; self.actual = actual; return self;");
-        w.wl("}")
         w.wl
+        w.wl(weakProxyInitializerSignature).braced {
+          w.wl("self = [super init];")
+          w.wl("self.actual = actual;")
+          w.wl("return self;");
+        }
 
         // Write the weak proxy's implementation of the interface's methods.
         for (method <- i.methods) {
           val methodName = idObjc.method(method.ident)
           val methodDeclaration = s"- (${marshal.returnType(method.ret)}) ${methodName}"
-          writeAlignedObjcCall(w, methodDeclaration, method.params, "\n", p => (idObjc.field(p.ident), s"(${marshal.paramType(p.ty)})${idObjc.local(p.ident)}"))
-          w.wl("{")
-          w.wl(s"id<${self}> capturedActual = self.actual;")
-          w.wl("if (capturedActual)")
-          w.wl("{")
-          writeAlignedObjcCall(w, s"[capturedActual ${methodName}", method.params, "];\n", p => (idObjc.field(p.ident), s"${idObjc.local(p.ident)}"))
-          w.wl("}")
-          w.wl("}")
+          w.wl
+          writeAlignedObjcCall(w, methodDeclaration, method.params, "\n", p => (idObjc.field(p.ident), s"(${marshal.paramType(p.ty)})${idObjc.local(p.ident)}")).braced {
+            w.wl(s"id<${self}> capturedActual = self.actual;")
+            w.wl("if (capturedActual)").braced {
+              writeAlignedObjcCall(w, s"[capturedActual ${methodName}", method.params, "];", p => (idObjc.field(p.ident), s"${idObjc.local(p.ident)}"))
+              w.wl
+            }
+          }
         }
 
+        w.wl
         w.wl("@end")
       })
       // For constants implemented via Methods, we generate their definitions in the
