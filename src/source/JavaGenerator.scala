@@ -23,6 +23,7 @@ import djinni.meta._
 import djinni.writer.IndentWriter
 
 import scala.collection.mutable
+import java.lang.Exception
 
 class JavaGenerator(spec: Spec) extends Generator(spec) {
 
@@ -142,6 +143,7 @@ class JavaGenerator(spec: Spec) extends Generator(spec) {
     writeJavaFile(ident, origin, refs.java, w => {
       val javaClass = marshal.typename(ident, i)
       val typeParamList = javaTypeParams(typeParams)
+      val completeJavaClass = javaClass + typeParamList
       writeDoc(w, doc)
 
       javaAnnotationHeader.foreach(w.wl)
@@ -214,6 +216,43 @@ class JavaGenerator(spec: Spec) extends Generator(spec) {
                 w.wl(s"${returnStmt}native_$meth(this.nativeRef${preComma(args)});")
               }
               w.wl(s"private native $ret native_$meth(long _nativeRef${preComma(params)});")
+            }
+          }
+        }
+
+        if (javaClass == "PatientHomeDisplay")
+        {
+          w.wl
+          w.wl(s"public static final class WeakProxy ${extendsKeyword} ${completeJavaClass}").braced {
+            w.wl(s"private final java.lang.ref.WeakReference<${completeJavaClass}> actual;")
+            w.wl
+            w.wl(s"public WeakProxy(${completeJavaClass} actual)").braced {
+              w.wl("this.actual = new java.lang.ref.WeakReference<>(actual);")
+            }
+
+            for (m <- i.methods) {
+              if (m.static) 
+              {
+                throw new Exception("Generating a weak proxy for an interface with static methods is not supported.")
+              }
+
+              val ret = marshal.returnType(m.ret)
+              if (ret != "void")
+              {
+                throw new Exception("All methods must return void if a weak proxy is to be generated.")
+              }
+
+              val params = m.params.map(p => marshal.paramType(p.ty) + " " + idJava.local(p.ident)).mkString(", ")
+              val args = m.params.map(p => idJava.local(p.ident)).mkString(", ")
+              val meth = idJava.method(m.ident)
+              w.wl
+              w.wl(s"@Override")
+              w.wl(s"public void $meth($params)").braced {
+                w.wl(s"${completeJavaClass} capturedActual = actual.get();")
+                w.wl("if (capturedActual != null)").braced {
+                  w.wl(s"capturedActual.${meth}(${args});") 
+                }
+              }
             }
           }
         }
