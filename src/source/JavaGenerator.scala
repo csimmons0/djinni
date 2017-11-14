@@ -241,7 +241,7 @@ class JavaGenerator(spec: Spec) extends Generator(spec) {
           }
         }
 
-        if (javaClass == "PatientHomeDisplay")
+        if (javaClass == "EchoView")
         {
           w.wl
           w.wl(s"public static final class WeakProxy ${extendsKeyword} ${completeJavaClass}").braced {

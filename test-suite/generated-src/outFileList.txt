@@ -4,6 +4,8 @@ djinni-output-temp/cpp/record_with_duration_and_derivings.cpp
 djinni-output-temp/cpp/date_record.hpp
 djinni-output-temp/cpp/date_record.cpp
 djinni-output-temp/cpp/map_date_record.hpp
+djinni-output-temp/cpp/echo_view.hpp
+djinni-output-temp/cpp/echo_view_model.hpp
 djinni-output-temp/cpp/_varname_record_.hpp
 djinni-output-temp/cpp/_varname_interface_.hpp
 djinni-output-temp/cpp/extended_record_base.hpp
@@ -56,6 +58,8 @@ djinni-output-temp/java/TestDuration.java
 djinni-output-temp/java/RecordWithDurationAndDerivings.java
 djinni-output-temp/java/DateRecord.java
 djinni-output-temp/java/MapDateRecord.java
+djinni-output-temp/java/EchoView.java
+djinni-output-temp/java/EchoViewModel.java
 djinni-output-temp/java/VarnameRecord.java
 djinni-output-temp/java/VarnameInterface.java
 djinni-output-temp/java/ExtendedRecord.java
@@ -104,6 +108,10 @@ djinni-output-temp/jni/NativeDateRecord.hpp
 djinni-output-temp/jni/NativeDateRecord.cpp
 djinni-output-temp/jni/NativeMapDateRecord.hpp
 djinni-output-temp/jni/NativeMapDateRecord.cpp
+djinni-output-temp/jni/NativeEchoView.hpp
+djinni-output-temp/jni/NativeEchoView.cpp
+djinni-output-temp/jni/NativeEchoViewModel.hpp
+djinni-output-temp/jni/NativeEchoViewModel.cpp
 djinni-output-temp/jni/NativeVarnameRecord.hpp
 djinni-output-temp/jni/NativeVarnameRecord.cpp
 djinni-output-temp/jni/NativeVarnameInterface.hpp
@@ -188,6 +196,9 @@ djinni-output-temp/objc/DBDateRecord.h
 djinni-output-temp/objc/DBDateRecord.mm
 djinni-output-temp/objc/DBMapDateRecord.h
 djinni-output-temp/objc/DBMapDateRecord.mm
+djinni-output-temp/objc/DBEchoView.h
+djinni-output-temp/objc/DBEchoView.mm
+djinni-output-temp/objc/DBEchoViewModel.h
 djinni-output-temp/objc/DBVarnameRecord.h
 djinni-output-temp/objc/DBVarnameRecord.mm
 djinni-output-temp/objc/DBVarnameInterface.h
@@ -255,6 +266,10 @@ djinni-output-temp/objc/DBDateRecord+Private.h
 djinni-output-temp/objc/DBDateRecord+Private.mm
 djinni-output-temp/objc/DBMapDateRecord+Private.h
 djinni-output-temp/objc/DBMapDateRecord+Private.mm
+djinni-output-temp/objc/DBEchoView+Private.h
+djinni-output-temp/objc/DBEchoView+Private.mm
+djinni-output-temp/objc/DBEchoViewModel+Private.h
+djinni-output-temp/objc/DBEchoViewModel+Private.mm
 djinni-output-temp/objc/DBVarnameRecord+Private.h
 djinni-output-temp/objc/DBVarnameRecord+Private.mm
 djinni-output-temp/objc/DBVarnameInterface+Private.h
