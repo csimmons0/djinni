@@ -1,8 +1,8 @@
 echo_view = interface +o +j {
-	display_text(text: string);
+    display_text(text: string);
 }
 
 echo_view_model = interface +c {
-	static create(view: echo_view): echo_view_model;
-	did_enter_text(text: string);
+    static create(view: echo_view): echo_view_model;
+    did_enter_text(text: string);
 }

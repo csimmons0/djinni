@@ -241,8 +241,7 @@ class JavaGenerator(spec: Spec) extends Generator(spec) {
           }
         }
 
-        if (javaClass == "EchoView")
-        {
+        if (javaClass == "EchoView") {
           w.wl
           w.wl(s"public static final class WeakProxy ${extendsKeyword} ${completeJavaClass}").braced {
             w.wl(s"private final java.lang.ref.WeakReference<${completeJavaClass}> actual;")
@@ -252,14 +251,12 @@ class JavaGenerator(spec: Spec) extends Generator(spec) {
             }
 
             for (m <- i.methods) {
-              if (m.static) 
-              {
+              if (m.static) {
                 throw new Exception("Generating a weak proxy for an interface with static methods is not supported.")
               }
 
               val ret = marshal.returnType(m.ret)
-              if (ret != "void")
-              {
+              if (ret != "void") {
                 throw new Exception("All methods must return void if a weak proxy is to be generated.")
               }
 
@@ -271,7 +268,7 @@ class JavaGenerator(spec: Spec) extends Generator(spec) {
               w.wl(s"public void $meth($params)").braced {
                 w.wl(s"${completeJavaClass} capturedActual = actual.get();")
                 w.wl("if (capturedActual != null)").braced {
-                  w.wl(s"capturedActual.${meth}(${args});") 
+                  w.wl(s"capturedActual.${meth}(${args});")
                 }
               }
             }

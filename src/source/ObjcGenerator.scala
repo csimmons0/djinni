@@ -128,7 +128,7 @@ class ObjcGenerator(spec: Spec) extends BaseObjcGenerator(spec) {
         w.wl
         w.wl(s"${weakProxyInitializerSignature};")
         w.wl
-        w.wl(s"@end")        
+        w.wl(s"@end")
       }
     })
 
@@ -139,7 +139,7 @@ class ObjcGenerator(spec: Spec) extends BaseObjcGenerator(spec) {
         generateObjcConstants(w, i.consts, self, ObjcConstantType.ConstVariable)
         if (self == "DBEchoView") {
           w.wl(s"@implementation ${weakProxyClassName}")
-          
+
           // Write the weak proxy's initializer.
           w.wl
           w.wl(weakProxyInitializerSignature).braced {
@@ -148,7 +148,7 @@ class ObjcGenerator(spec: Spec) extends BaseObjcGenerator(spec) {
             w.wl("return self;");
           }
 
-          // Write the weak proxy's implementation of the interface's methods.
+          // Write the weak proxy's implementations of the interface's methods.
           for (method <- i.methods) {
             val methodName = idObjc.method(method.ident)
             val methodDeclaration = s"- (${marshal.returnType(method.ret)}) ${methodName}"
