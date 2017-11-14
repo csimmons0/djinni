@@ -1,6 +1,6 @@
 #import "TXSItemList.h"
 #import "TXSSortItems.h"
-#import "TextSort-Swift.h"
+#import "TXSTextboxListenerImpl.h"
 #import "TXSViewController.h"
 #import "TXSTextboxListener.h"
 
