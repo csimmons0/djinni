@@ -13,7 +13,7 @@ import javax.annotation.Nonnull;
  */
 public interface Conflict {
 
-    public static final class CppProxy implements Conflict
+    static final class CppProxy implements Conflict
     {
         private final long nativeRef;
         private final AtomicBoolean destroyed = new AtomicBoolean(false);
