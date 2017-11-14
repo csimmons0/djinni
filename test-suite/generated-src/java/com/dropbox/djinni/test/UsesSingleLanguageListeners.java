@@ -22,7 +22,7 @@ public interface UsesSingleLanguageListeners {
     @CheckForNull
     public JavaOnlyListener returnForJava();
 
-    public static final class CppProxy implements UsesSingleLanguageListeners
+    static final class CppProxy implements UsesSingleLanguageListeners
     {
         private final long nativeRef;
         private final AtomicBoolean destroyed = new AtomicBoolean(false);

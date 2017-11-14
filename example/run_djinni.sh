@@ -28,8 +28,6 @@ java_package="com.dropbox.textsort"
 
 gen_stamp="$temp_out/gen.stamp"
 
-objc_bridging_header="$base_dir/objc/TextSort/TextSort-Bridging-Header.h"
-
 if [ $# -eq 0 ]; then
     # Normal build.
     true
@@ -69,10 +67,10 @@ fi
     --ident-jni-class NativeFooBar \
     --ident-jni-file NativeFooBar \
     \
-	--objc-out "$temp_out/objc" \
-	--objcpp-out "$temp_out/objc" \
+    --objc-out "$temp_out/objc" \
+    --objcpp-out "$temp_out/objc" \
     --objc-type-prefix TXS \
-    --objc-bridging-header "$objc_bridging_header" \
+    --objc-swift-bridging-header "TextSort-Bridging-Header" \
     \
     --idl "$in"
 
@@ -83,7 +81,7 @@ mirror() {
     local src="$1" ; shift
     local dest="$1" ; shift
     mkdir -p "$dest"
-    rsync -a --delete --checksum --itemize-changes "$src"/ "$dest" | grep -v '^\.' | sed "s/^/[$prefix]/"
+    rsync -r --delete --checksum --itemize-changes "$src"/ "$dest" | sed "s/^/[$prefix]/"
 }
 
 echo "Copying generated code to final directories..."

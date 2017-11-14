@@ -14,7 +14,7 @@ public interface VarnameInterface {
     @CheckForNull
     public VarnameInterface Imethod(@CheckForNull VarnameInterface IArg);
 
-    public static final class CppProxy implements VarnameInterface
+    static final class CppProxy implements VarnameInterface
     {
         private final long nativeRef;
         private final AtomicBoolean destroyed = new AtomicBoolean(false);
