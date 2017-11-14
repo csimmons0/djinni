@@ -5,9 +5,9 @@ import djinni.generatorTools._
 import djinni.meta._
 
 class JavaMarshal(spec: Spec) extends Marshal(spec) {
-  val javaJsonPropertyAnnotation = spec.javaJsonPropertyAnnotation.map(annotationFromCanonicalClassName)
-  val javaNullableAnnotation = spec.javaNullableAnnotation.map(annotationFromCanonicalClassName)
-  val javaNonnullAnnotation = spec.javaNonnullAnnotation.map(annotationFromCanonicalClassName)
+
+  val javaNullableAnnotation = spec.javaNullableAnnotation.map(pkg => '@' + pkg.split("\\.").last)
+  val javaNonnullAnnotation = spec.javaNonnullAnnotation.map(pkg => '@' + pkg.split("\\.").last)
 
   override def typename(tm: MExpr): String = toJavaType(tm, None)
   def typename(name: String, ty: TypeDef): String = idJava.ty(name)
@@ -66,9 +66,6 @@ class JavaMarshal(spec: Spec) extends Marshal(spec) {
     case r: Record => true
     case e: Enum =>  true
   }
-
-  private def annotationFromCanonicalClassName(canonicalName: String): String = '@' + simpleClassNameFromCanonicalClassName(canonicalName)
-  private def simpleClassNameFromCanonicalClassName(canonicalName: String): String = canonicalName.split("\\.").last
 
   def isEnumFlags(m: Meta): Boolean = m match {
     case MDef(_, _, _, Enum(_, true)) => true

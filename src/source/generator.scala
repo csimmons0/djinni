@@ -35,7 +35,6 @@ package object generatorTools {
                    javaCppException: Option[String],
                    javaAnnotation: Option[String],
                    javaGenerateInterfaces: Boolean,
-                   javaJsonPropertyAnnotation: Option[String],
                    javaNullableAnnotation: Option[String],
                    javaNonnullAnnotation: Option[String],
                    javaImplementAndroidOsParcelable: Boolean,
