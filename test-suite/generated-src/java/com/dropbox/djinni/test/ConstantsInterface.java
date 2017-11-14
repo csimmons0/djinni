@@ -74,7 +74,7 @@ public interface ConstantsInterface {
      */
     public void dummy();
 
-    public static final class CppProxy implements ConstantsInterface
+    static final class CppProxy implements ConstantsInterface
     {
         private final long nativeRef;
         private final AtomicBoolean destroyed = new AtomicBoolean(false);

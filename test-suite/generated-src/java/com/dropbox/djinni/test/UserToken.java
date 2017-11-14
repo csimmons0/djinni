@@ -11,7 +11,7 @@ public interface UserToken {
     @Nonnull
     public String whoami();
 
-    public static final class CppProxy implements UserToken
+    static final class CppProxy implements UserToken
     {
         private final long nativeRef;
         private final AtomicBoolean destroyed = new AtomicBoolean(false);
